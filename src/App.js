@@ -18,7 +18,7 @@ class App extends Component {
     console.info(event.target.value);
   }
 
-  onClick = (event) => {
+  onButtonSubmit = (event) => {
     console.info(event);
   }  
   
@@ -29,7 +29,7 @@ class App extends Component {
         <Navigation />
         <Logo />
         <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onClick={this.onClick}/>  
+        <ImageLinkForm onInputChange={this.onInputChange} onClick={this.onButtonSubmit}/>  
       </div>
     );
   }  
