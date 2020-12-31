@@ -10,11 +10,15 @@ import Rank from './components/Rank/Rank';
 import './App.css';
 import React, { Component } from 'react';
 
+/**
+ * external parameters for the app
+ */
 const app = new Clarifai.App({
   apiKey: '514ae3e3dae449c28602447b1803d951'
  });
 
- const particlesOptions = {
+
+const particlesOptions = {
   particles: {
     number: {
       value: 30,
@@ -38,6 +42,10 @@ class App extends Component {
       isSignedIn: false
     }
   }
+
+/**
+ * app event methods and others 
+ */
 
   calculateFaceLocation = (data) => {
     //console.log(data.outputs[0].data.regions[0].region_info.bounding_box)
@@ -86,6 +94,10 @@ class App extends Component {
     this.setState({'route': route})
   }
   
+
+  /**
+   * main render app, the app render starts here
+   */
   render(){
     const {isSignedIn, imageUrl, box, route} = this.state;
 
