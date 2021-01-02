@@ -46,6 +46,12 @@ class App extends Component {
 /**
  * app event methods and others 
  */
+  componentDidMount() {
+    fetch('http://localhost:4000')
+      .then(response => response.json())
+      .then(console.log);
+  }
+
 
   calculateFaceLocation = (data) => {
     //console.log(data.outputs[0].data.regions[0].region_info.bounding_box)
