@@ -6,6 +6,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 https://front-hidden-retreat-36571.herokuapp.com/
 
-## Front end Only
+## Frontend Only
 
 https://aldriguz.github.io/face-recognition/
