@@ -2,7 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Demo
+## Full Demo
 
 https://front-hidden-retreat-36571.herokuapp.com/
 
+## Front end Only
+
+https://aldriguz.github.io/face-recognition/
