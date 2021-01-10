@@ -62,7 +62,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:4000')
+    fetch('https://hidden-retreat-36571.herokuapp.com')
       .then(response => response.json())
       .then(console.log);
   }
@@ -100,7 +100,7 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState({'imageUrl': this.state.input});
 
-    fetch('http://localhost:4000/imageUrl', {
+    fetch('https://hidden-retreat-36571.herokuapp.com/imageUrl', {
             'method': 'post',
             'headers': {'Content-Type': 'application/json'},
             'body': JSON.stringify({
@@ -110,7 +110,7 @@ class App extends Component {
           .then( response => response.json())
           .then(response => {
             if(response){
-              fetch('http://localhost:4000/image', {
+              fetch('https://hidden-retreat-36571.herokuapp.com/image', {
                 'method': 'put',
                 'headers': {'Content-Type': 'application/json'},
                 'body': JSON.stringify({
