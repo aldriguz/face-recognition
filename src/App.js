@@ -28,9 +28,8 @@ const particlesOptions = {
 const initialState = {
   input: '',
   imageUrl: '',
-  box: {
-  },
-  route: 'signin',
+  boxes: [],
+  route: 'home',
   isSignedIn: false,
   user: {
     id: 0,
@@ -69,27 +68,38 @@ class App extends Component {
 
 
   calculateFaceLocation = (data) => {
-    //console.log(data.outputs[0].data.regions[0].region_info.bounding_box)
+    console.log(data)
     //console.log(data['outputs'][0]['data']['regions'][0]['region_info']['bounding_box']); //same as line up
 
-    const faceFound = data['outputs'][0]['data']['regions'][0]['region_info']['bounding_box'];
+    const regionsResponse = data['outputs'][0]['data']['regions'];
+    const facesArray = regionsResponse.map( region => {
+      const faceFound = region['region_info']['bounding_box'];
+      const image = document.getElementById('inputImage');
+      const width = Number(image.width);
+      const height = Number(image.height);
+
+      return {
+        leftCol: faceFound.left_col * width,
+        topRow: faceFound.top_row * height,
+        rightCol: width - (faceFound.right_col * width),
+        bottomRow: height - (faceFound.bottom_row * height)
+      };
+    })
+    
+    /*
+    const faceFound = [0]['region_info']['bounding_box'];
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
     const height = Number(image.height);
-
+    */
+   
     //math to the rescue to mark the box in the image
-    return {
-      leftCol: faceFound.left_col * width,
-      topRow: faceFound.top_row * height,
-      rightCol: width - (faceFound.right_col * width),
-      bottomRow: height - (faceFound.bottom_row * height)
-    }
-
+    return facesArray;
   }
 
-  displayFaceBox = (box) => {
-    console.warn(box);
-    this.setState({'box': box});
+  displayFaceBox = (boxes) => {
+    console.warn(boxes);
+    this.setState({'boxes': boxes});
   }
 
   onInputChange = (event) => {
@@ -124,8 +134,8 @@ class App extends Component {
                 .catch(console.warn);
                 
             }
-    
-            this.displayFaceBox(this.calculateFaceLocation(response))
+            //console.log(response);
+            this.displayFaceBox(this.calculateFaceLocation(response))            
           })
           .catch(console.error);
   }  
@@ -145,7 +155,7 @@ class App extends Component {
    * main render app, the app render starts here
    */
   render(){
-    const {isSignedIn, imageUrl, box, route, user} = this.state;
+    const {isSignedIn, imageUrl, boxes, route, user} = this.state;
 
     return (
       <div className="App">
@@ -156,7 +166,7 @@ class App extends Component {
               <Logo />
               <Rank username={user.name} entries={user.entries}/>
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>  
-              <FaceRecognition imageUrl={imageUrl} faceBox={box}/>
+              <FaceRecognition imageUrl={imageUrl} faceBoxes={boxes}/>
             </div>
           : ( route === 'signin')
               ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/> 
