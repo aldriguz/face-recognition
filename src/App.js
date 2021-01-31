@@ -9,8 +9,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import './App.css';
 import React, { Component } from 'react';
-
-
+import {apiHost} from './constants';
 
 const particlesOptions = {
   particles: {
@@ -61,7 +60,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('https://hidden-retreat-36571.herokuapp.com')
+    fetch(apiHost)
       .then(response => response.json())
       .then(console.log);
   }
@@ -85,13 +84,6 @@ class App extends Component {
         bottomRow: height - (faceFound.bottom_row * height)
       };
     })
-    
-    /*
-    const faceFound = [0]['region_info']['bounding_box'];
-    const image = document.getElementById('inputImage');
-    const width = Number(image.width);
-    const height = Number(image.height);
-    */
    
     //math to the rescue to mark the box in the image
     return facesArray;
@@ -110,7 +102,7 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState({'imageUrl': this.state.input});
 
-    fetch('https://hidden-retreat-36571.herokuapp.com/imageUrl', {
+    fetch(`${apiHost}/imageUrl`, {
             'method': 'post',
             'headers': {'Content-Type': 'application/json'},
             'body': JSON.stringify({
@@ -120,7 +112,7 @@ class App extends Component {
           .then( response => response.json())
           .then(response => {
             if(response){
-              fetch('https://hidden-retreat-36571.herokuapp.com/image', {
+              fetch(`${apiHost}/image`, {
                 'method': 'put',
                 'headers': {'Content-Type': 'application/json'},
                 'body': JSON.stringify({

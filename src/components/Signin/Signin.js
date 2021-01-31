@@ -1,4 +1,5 @@
 import React from 'react';
+import {apiHost} from '../../constants';
 
 class Signin extends React.Component {
     constructor() {
@@ -21,7 +22,7 @@ class Signin extends React.Component {
     onSubmitSignIn = () => {
         console.log(this.state);
         
-        fetch('https://hidden-retreat-36571.herokuapp.com/signin', {
+        fetch(`${apiHost}/signin`, {
             'method': 'post',
             'headers': {'Content-Type': 'application/json'},
             'body': JSON.stringify({

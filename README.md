@@ -14,3 +14,5 @@ https://aldriguz.github.io/face-recognition/
 ## This project runs on heroku
 
 need to push the changes to the repository on heroku app to deploy
+
+## Update api host url in constants file

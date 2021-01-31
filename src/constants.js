@@ -1,0 +1,1 @@
+export const apiHost = "http://localhost:3000";//https://hidden-retreat-36571.herokuapp.com

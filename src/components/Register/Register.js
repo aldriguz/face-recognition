@@ -1,4 +1,5 @@
 import React from 'react';
+import {apiHost} from '../../constants';
 
 class Register extends React.Component {
     constructor() {
@@ -15,7 +16,7 @@ class Register extends React.Component {
         this.setState({name: event.target.value})
     }
 
-     onNameChange = (event) => {
+    onNameChange = (event) => {
         this.setState({name: event.target.value})
     }
 
@@ -31,7 +32,7 @@ class Register extends React.Component {
     onSubmitRegister = () => {
         console.log(this.state);
         
-        fetch('https://hidden-retreat-36571.herokuapp.com/register', {
+        fetch(`${apiHost}/register`, {
             'method': 'post',
             'headers': {'Content-Type': 'application/json'},
             'body': JSON.stringify({
@@ -42,7 +43,7 @@ class Register extends React.Component {
         })
             .then(response => response.json())
             .then(user => {
-                if(user){
+                if(user?.name){
                     this.props.loadUser(user);
                     this.props.onRouteChange('home');
                 }
