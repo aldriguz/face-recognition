@@ -11,8 +11,7 @@ class ProfileIcon extends Component {
         }
     }
     
-    toggle() {
-        console.log('')
+    toggle() {        
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
         }));
@@ -32,11 +31,11 @@ class ProfileIcon extends Component {
                             className="br-100 ba h3 w3 dib" alt="avatar" 
                         />
                     </DropdownToggle>
-                    <DropdownMenu 
+                    <DropdownMenu
                         right
                         className='b--transparent shadow-8' 
                         style={{marginTop: '20px', backgroundColor: 'rgba(255, 255, 255, 0.8)'}}>
-                        <DropdownItem>View profile</DropdownItem>
+                        <DropdownItem onClick={ this.props.toogleModal }>View profile</DropdownItem>
                         <DropdownItem onClick={() => this.props.onRouteChange('signout')}>Sign Out</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>

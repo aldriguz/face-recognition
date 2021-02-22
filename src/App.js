@@ -1,3 +1,5 @@
+import React, { Component } from 'react';
+import {apiHost} from './constants';
 import Particles from 'react-particles-js';
 import Navigation from './components/Navigation/Navigation';
 import Signin from './components/Signin/Signin';
@@ -7,9 +9,10 @@ import Logo from './components/Logo/Logo';
 //import Clarifai from 'clarifai';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
+import Modal from './components/Modal/Modal';
+import Profile from './components/Profile/Profile';
 import './App.css';
-import React, { Component } from 'react';
-import {apiHost} from './constants';
+
 
 const particlesOptions = {
   particles: {
@@ -28,15 +31,19 @@ const initialState = {
   input: '',
   imageUrl: '',
   boxes: [],
-  route: 'home',
+  route: 'signin',
   isSignedIn: true,
+  isProfileOpen: false,
   user: {
     id: 0,
     name: '',
     email: '',
     entries: 0,
-    joinedAt: ''
-  }
+    joined_at: '',
+    pet: '',
+    age: ''
+  },
+  
 }
 
 class App extends Component {
@@ -54,7 +61,7 @@ class App extends Component {
         name: data.name,
         email: data.email,
         entries: data.entries,
-        joinedAt: data.joinedAt
+        joined_at: data.joined_at
       }
     })
   }
@@ -133,6 +140,7 @@ class App extends Component {
   }  
 
   onRouteChange = (route) => {
+    //console.log('route', route);
     if (route === 'signout'){
       this.setState(initialState);      
     } else if (route === 'home') {
@@ -143,19 +151,36 @@ class App extends Component {
   }
   
 
+  toogleModal = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      isProfileOpen: !prevState.isProfileOpen
+    }));
+  }
+
   /**
    * main render app, the app render starts here
    */
   render(){
-    const {isSignedIn, imageUrl, boxes, route, user} = this.state;
+    const {isSignedIn, imageUrl, boxes, route, user, isProfileOpen} = this.state;
 
     return (
       <div className="App">
         <Particles className='particles' params={particlesOptions} />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toogleModal={this.toogleModal}/>
+        { isProfileOpen &&
+            <Modal>
+              <Profile 
+                isProfileOpen={isProfileOpen} 
+                toogleModal={this.toogleModal} 
+                loadUser={this.loadUser}
+                user={user}/>
+            </Modal>
+        }
         { route === 'home' 
           ? <div>
               <Logo />
+              
               <Rank username={user.name} entries={user.entries}/>
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>  
               <FaceRecognition imageUrl={imageUrl} faceBoxes={boxes}/>
