@@ -13,30 +13,41 @@ class Profile extends React.Component {
     }
 
     onFormChange = (event) => {
-        console.log('aaa');
+        console.log('data updated');
+        console.log(event.target.name);
+        console.log(event.target.value);
+
         switch(event.target.name){
-            case 'user.name':
+            case 'name':
                 this.setState({name: event.target.value});
                 break;
-            case 'user.age':
+            case 'age':
                 this.setState({age: event.target.value});
                 break;
-            case 'user.pet':                
+            case 'pet':                
                 this.setState({pet: event.target.value});
                 break;
             default:
                 break;
         }
+
+        console.log('after update');
+        console.log(this.state);
     }
 
     onProfileUpdate = (data) => {
         fetch(`${apiHost}/profile/${this.props.user.id}`, {
             method: 'post',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({formInput: data})
         }).then(resp => {
-            this.props.toogleModal();
-            this.props.loadUser({...this.props.user, ...data});
+            if(resp.status === 200 || resp.status === 304) {
+                this.props.toogleModal();
+                this.props.loadUser({...this.props.user, ...data});
+            }
         }).catch(console.log);
     }
 

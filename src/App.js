@@ -102,30 +102,33 @@ class App extends Component {
 
 
   calculateFaceLocation = (data) => {
-    console.log(data)
-    //console.log(data['outputs'][0]['data']['regions'][0]['region_info']['bounding_box']); //same as line up
-
-    const regionsResponse = data['outputs'][0]['data']['regions'];
-    const facesArray = regionsResponse.map( region => {
-      const faceFound = region['region_info']['bounding_box'];
-      const image = document.getElementById('inputImage');
-      const width = Number(image.width);
-      const height = Number(image.height);
-
-      return {
-        leftCol: faceFound.left_col * width,
-        topRow: faceFound.top_row * height,
-        rightCol: width - (faceFound.right_col * width),
-        bottomRow: height - (faceFound.bottom_row * height)
-      };
-    })
-   
-    //math to the rescue to mark the box in the image
-    return facesArray;
+    if(data && data.outputs){
+      const regionsResponse = data['outputs'][0]['data']['regions'];
+      const facesArray = regionsResponse.map( region => {
+        const faceFound = region['region_info']['bounding_box'];
+        const image = document.getElementById('inputImage');
+        const width = Number(image.width);
+        const height = Number(image.height);
+  
+        return {
+          leftCol: faceFound.left_col * width,
+          topRow: faceFound.top_row * height,
+          rightCol: width - (faceFound.right_col * width),
+          bottomRow: height - (faceFound.bottom_row * height)
+        };
+      })
+     
+      //math to the rescue to mark the box in the image
+      return facesArray;
+    }
+    
+    return;
   }
 
   displayFaceBox = (boxes) => {
-    console.warn(boxes);
+    //console.warn(boxes);
+    if (!boxes)
+      return
     this.setState({'boxes': boxes});
   }
 
@@ -139,7 +142,10 @@ class App extends Component {
 
     fetch(`${apiHost}/imageUrl`, {
             'method': 'post',
-            'headers': {'Content-Type': 'application/json'},
+            'headers': {
+              'Content-Type': 'application/json',
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             'body': JSON.stringify({
                 input: this.state.input
             })
@@ -149,7 +155,10 @@ class App extends Component {
             if(response){
               fetch(`${apiHost}/image`, {
                 'method': 'put',
-                'headers': {'Content-Type': 'application/json'},
+                'headers': {
+                  'Content-Type': 'application/json',
+                  'Authorization': window.sessionStorage.getItem('token')
+                },
                 'body': JSON.stringify({
                     id: this.state.user.id
                 })
