@@ -13,7 +13,6 @@ import Modal from './components/Modal/Modal';
 import Profile from './components/Profile/Profile';
 import './App.css';
 
-
 const particlesOptions = {
   particles: {
     number: {
@@ -67,9 +66,38 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch(apiHost)
-      .then(response => response.json())
-      .then(console.log);
+    const token = window.sessionStorage.getItem('token');
+
+    if (token) {
+      fetch(`${apiHost}/signin`, {
+        'method': 'post',
+        'headers': {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+      .then(res => res.json())  
+      .then(data => {
+        if(data && data.id){
+          //console.log('success, we need to get user profile');
+          fetch(`${apiHost}/profile/${data.id}`, {
+            'method': 'get',
+            'headers': {
+              'Content-Type': 'application/json',
+              'Authorization': token
+            }
+          })
+          .then(resp => resp.json())
+          .then(user => {
+            if(user && user.email){
+              this.loadUser(user);
+              this.onRouteChange('home');
+            }
+          })
+        }
+      })
+      .catch(console.error);
+    }
   }
 
 

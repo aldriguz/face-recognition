@@ -19,6 +19,12 @@ class Signin extends React.Component {
         this.setState({signInPassword: event.target.value})
     }
 
+    saveAuthTokenInSession = (token) => {
+        console.log('sessionStorage', token);
+
+        window.sessionStorage.setItem('token', token);
+    }
+
     onSubmitSignIn = () => {
         console.log(this.state);
         
@@ -32,16 +38,32 @@ class Signin extends React.Component {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                if( !isNaN(data?.id) ){
-                    this.props.loadUser(data);
-                    this.props.onRouteChange('home');
-                }
+                //console.log(data);
+                if( data && data.userId && data.success === 'true' ){
+                    this.saveAuthTokenInSession(data.token);
+                   
+                    fetch(`${apiHost}/profile/${data.userId}`, {
+                        'method': 'get',
+                        'headers': {
+                          'Content-Type': 'application/json',
+                          'Authorization': data.token
+                        }
+                      })
+                      .then(resp => resp.json())
+                      .then(user => {
+                        if(user && user.email){
+                          this.props.loadUser(user);
+                          this.props.onRouteChange('home');
+                        }
+                      })
+                } else {
+                    console.error('data', data);
+                } 
             });
     }
 
     render() {
-        const {onRouteChange, } = this.props;
+        const {onRouteChange } = this.props;
         return (
             <article className="mw6 center ba dark-gray b--black-50 br3 pa3 pa4-ns mv3 shadow-5">
                 <main className="pa4 black-80">
@@ -54,7 +76,7 @@ class Signin extends React.Component {
                                     className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                     type="email"
                                     name="email-address" 
-                                    id="email-addres"  
+                                    id="email-address"  
                                     onChange={this.onEmailChange}/>
                             </div>
                             <div className="mv3">
